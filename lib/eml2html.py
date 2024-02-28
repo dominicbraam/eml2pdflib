@@ -44,15 +44,18 @@ class EmailtoHtml(object):
 
     def __handle_html_message_body(self, part):
         payload = part.get_payload(decode=True)
-        charset = part.get_content_charset()
-        if not charset:
-            charset = 'utf-8'
+        charset = part.get_content_charset() or 'utf-8'  # Default to utf-8 if no charset is found
 
-        payload = re.sub(r'cid:([\w_@.-]+)',
+        try:
+            payload_str = payload.decode(charset)
+        except UnicodeDecodeError:
+            payload_str = payload.decode('utf-8', 'replace')  # Fallback to utf-8 with replacement
+
+        payload_str = re.sub(r'cid:([\w_@.-]+)',
                          functools.partial(self.__cid_replace),
-                         str(payload, charset))
+                         payload_str)
 
-        return payload
+        return payload_str
 
     def __handle_plain_message_body(self, part):
         if part['Content-Transfer-Encoding'] == '8bit':
@@ -157,7 +160,7 @@ class EmailtoHtml(object):
 
         for img in soup.find_all('img'):
             if img.has_attr('src'):
-                src = img['src']
+                src = img['src'].replace(' ', '%20')
                 lower_src = src.lower()
                 if lower_src == 'broken':
                     del img['src']
