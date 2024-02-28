@@ -55,8 +55,13 @@ docs/_build/
 # PyBuilder
 target/
 
+# Virtual Environments
+venv
+.venv
+
 .email2pdf.profile
 
 pdfs/
+outputs/
 
 .env
