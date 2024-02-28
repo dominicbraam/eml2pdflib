@@ -10,6 +10,7 @@ WKHTMLTOPDF_ERRORS_IGNORE = frozenset(
      r'Invalid SOS parameters for sequential JPEG',
      r'libpng warning: Out of place sRGB chunk',
      r'Exit with code 1 due to network error: ContentNotFoundError',
+     r'Exit with code 1 due to network error: ContentOperationNotPermittedError',
      r'Exit with code 1 due to network error: UnknownContentError'])
 
 
